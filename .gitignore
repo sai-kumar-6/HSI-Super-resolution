@@ -26,3 +26,6 @@ Thumbs.db
 **/comparison_results/
 **/runs/
 **/old_folders/
+
+# --- Thesis report (private) ---
+docs/SAI_SC24M175.pdf

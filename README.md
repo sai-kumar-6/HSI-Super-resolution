@@ -16,8 +16,8 @@ Mtech-project/
 │   ├── ARCHITECTURE.md
 │   ├── ARCHITECTURE_COMPARISON.md
 │   ├── FLOPS_ANALYSIS.md
-│   ├── QUICKSTART.md
-│   └── SAI_SC24M175.pdf              Thesis report
+│   └── QUICKSTART.md
+│       (SAI_SC24M175.pdf, the thesis report, is kept locally only — git-ignored)
 │
 └── src/
     ├── chikusei/                     Dataset folder (*.mat files git-ignored)
