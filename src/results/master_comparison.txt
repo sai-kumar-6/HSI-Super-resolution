@@ -1,12 +1,40 @@
-Generated: 2026-03-12 12:59:18
+Updated: 2026-08-28 (consolidated from per-version result files; see master_comparison.json for exact sources/notes per row)
 
 ================================================================================
   MASTER COMPARISON - All VMamba Pansharpening Versions
 ================================================================================
-  Version     Scale    PSNR(+)     SAM(-)   ERGAS(-)  Params(M)  Inf(ms)
-  ---------- ------ ---------- ---------- ---------- ---------- --------
-  V2              4     44.082     20.516     30.063      0.741     56.7
-  V3              4      0.000      0.000      0.000      0.000      0.0
-  V4              4      0.000      0.000      0.000      0.000      0.0
-  V5              4     43.336      6.736      5.608      1.774      0.0
+  Version               Scale    PSNR(+)     SAM(-)   ERGAS(-)  Params(M)  Inf(ms)
+  -------------------- ------ ---------- ---------- ---------- ---------- --------
+  V1                        4     44.652      6.743     71.720      1.840     26.0
+  V2                        4     44.320      6.966      4.531      0.741      -
+  V2 (improved baseline)     4     44.985      6.766    113.055      0.676     26.5
+  V3                        4     47.349      6.614     61.196      1.523     38.9
+  V4                        4     49.367      6.321      4.490      1.532      -
+  V5                        4     43.336      6.736      5.608      1.774      -
+  V6                        4     47.690      2.640      3.333      6.780      -
 ================================================================================
+
+Notes
+-----
+* V1/"V2 (improved baseline)"/V3 numbers are from the same controlled comparison run
+  (src/version3/comparison/results/summary_all.json), trained together under identical
+  conditions -- these three are the most directly comparable of the rows above.
+* V2 is version2's own dedicated implementation and training run
+  (src/version2/runs/scale4/log.json, epoch 50/50) -- a separate model/run from the
+  "improved" baseline that V3-V6's comparison factories reuse (scripts/vmamba_pansharp_improved.py).
+  Both are included since both get cited in different places (version2/README.md vs
+  version6/README.md's evolution table). A prior version of this file mistakenly showed
+  psnr=44.08/sam=20.52/ergas=30.06 for V2 -- that was a stale/unrelated run.
+* V4 is from src/version4/comparison/results/summary_all.json (epoch 49). Inference time not recorded.
+* V5 numbers here match the ones already used in version6/README.md's evolution table. A later run
+  (src/version5/comparison/results/comparison_results.json) recorded a better result --
+  PSNR 48.63 / SAM 6.38 / ERGAS 5.41 / SSIM 0.9992 -- not yet reconciled with the checkpoint these
+  numbers correspond to. Verify against comparison/checkpoints/v5_best.pth before citing either.
+* V6 PSNR/SAM/ERGAS/SSIM are the final (epoch 50) values from
+  src/version6/comparison/results/v6_training_history.json -- this was previously "TBD" in
+  version6/README.md. Params (~6.78M) is from that README's architecture summary.
+* This file replaces a stale prior version that had zeros for V3/V4, was missing V1/V6
+  entirely, and had an incorrect V2 entry (see note above).
+* master_comparison_chart.png was not regenerated (matplotlib is not available in this environment) --
+  regenerate with `python scripts/plot_training_metrics.py` (or similar) once this file's numbers
+  are re-verified against the latest checkpoints.

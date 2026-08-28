@@ -49,13 +49,39 @@ L = 1.0×L1 + 0.1×SAM + 0.05×Edge + 0.1×SSIM
 
 ---
 
-## V1 Files (archived here)
+## Results (best checkpoint)
 
-All V1 scripts have been moved to `version1/old_scripts/`.
+| Metric | Value |
+|---|---|
+| PSNR (dB) | 44.65 |
+| SAM (°) | 6.74 |
+| ERGAS | 71.72 |
+| Inference | 26.0 ms |
+| Params | 1,840,352 |
+
+Source: `../version3/comparison/results/summary_all.json` ('old' variant — V1 retrained
+under V3's comparison harness for an apples-to-apples baseline against V2/V3). See
+`src/results/master_comparison.txt` for the cross-version comparison.
+
+---
+
+## V1 Files
+
+The active model is `model/model.py` (`VMambaPansharp` and its building blocks —
+`SelectiveSSMOptimized`, `SS2DOptimized`, `MambaVisionBlockOptimized`, `HSIEncoder`,
+`EdgeEnhancement`, `PANEncoder`, `CrossAttentionFusion`, `VMambaBackbone`,
+`ReconstructionHead`). This is the file every later version (V3, V4, V5, V6) duplicates
+its needed V1 classes from, so it's effectively the source of truth for the whole
+project — a change here has no automatic effect on later versions, since they each
+carry their own copy (see each version's README, "Self-containment note").
+
+The rest of V1's original scripts have been moved to `version1/old_scripts/` as a
+historical archive. They predate the current `model/` layout and reference files by
+their old flat paths, so they are **not guaranteed to run as-is** — kept for reference,
+not as a maintained entry point.
 
 | File | Purpose |
 |------|---------|
-| `old_scripts/vmamba_pansharp.py` | V1 model (still at root for comparison use) |
 | `old_scripts/train_vmamba_pansharp.py` | V1 training script |
 | `old_scripts/evaluate_vmamba_pansharp.py` | V1 evaluation |
 | `old_scripts/compare_models.py` | V1 comparison (CNN vs UNet vs Transformer vs VMamba) |
@@ -121,21 +147,29 @@ version1/
 
 ---
 
-## V1 Quick Commands (still runnable from project root)
+## V1 Quick Commands
 
 ```bash
-# V1 model forward pass test
-python vmamba_pansharp.py
+cd version1
+pip install -r requirements.txt
 
+# V1 model forward pass self-test
+python model/model.py
+```
+
+The commands below use the archived `old_scripts/` and are not guaranteed to run
+without adjustment (see the note above):
+
+```bash
 # V1 baseline comparison (CNN / UNet / Transformer)
-python compare_models.py --dataset pavia --epochs 5
+python old_scripts/compare_models.py --dataset pavia --epochs 5
 
 # V1 training
-python train_vmamba_pansharp.py --dataset pavia --epochs 30
+python old_scripts/train_vmamba_pansharp.py --dataset pavia --epochs 30
 
 # V1 evaluation
-python evaluate_vmamba_pansharp.py \
-    --checkpoint version1/experiments/vmamba_pansharp_pavia_20251222_040706/checkpoints/best.pth
+python old_scripts/evaluate_vmamba_pansharp.py \
+    --checkpoint experiments/vmamba_pansharp_pavia_20251222_040706/checkpoints/best.pth
 ```
 
 ---

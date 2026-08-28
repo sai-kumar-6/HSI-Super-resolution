@@ -1,40 +1,81 @@
 [
   {
+    "version": "V1",
+    "label": "VMambaPansharp (CrossAttention + Sobel + PixelShuffle)",
+    "scale": 4,
+    "params": 1840352,
+    "psnr": 44.65161701277191,
+    "sam": 6.743486829832489,
+    "ergas": 71.7200689128801,
+    "inf_ms": 26.01995501318015,
+    "source": "src/version3/comparison/results/summary_all.json ('old' variant, retrained under V3's comparison harness for an apples-to-apples baseline)"
+  },
+  {
     "version": "V2",
+    "label": "V2VMambaPansharp (CrossMamba + LearnableHF + ResidualUps, Hillis-Steele scan)",
     "scale": 4,
     "params": 741352,
-    "psnr": 44.08236906368738,
-    "sam": 20.516345532892952,
-    "ergas": 30.062788806541388,
-    "inf_ms": 56.68,
-    "run_dir": "version2\\runs\\scale4"
+    "psnr": 44.320051230636295,
+    "sam": 6.966330165956535,
+    "ergas": 4.531145086475447,
+    "ssim": 0.996863,
+    "source": "src/version2/runs/scale4/log.json (epoch 50/50, own dedicated implementation and training run)"
+  },
+  {
+    "version": "V2 (improved baseline)",
+    "label": "ImprovedVMambaPansharp -- the separate reimplementation reused as a baseline in V3-V6's comparison factories",
+    "scale": 4,
+    "params": 675752,
+    "psnr": 44.984956180348114,
+    "sam": 6.7656704491260005,
+    "ergas": 113.05481125326718,
+    "inf_ms": 26.53576501761563,
+    "source": "src/version3/comparison/results/summary_all.json ('improved' variant, retrained under V3's comparison harness)",
+    "note": "Not the same model/training run as version2's own entry above -- this is scripts/vmamba_pansharp_improved.py, a separate reimplementation of the same V2 ideas that V3-V6's baselines.py factories use for their 'improved' comparison variant. Listed here since it's the number version6/README.md's evolution table uses for 'V2'. A prior draft of this file mistakenly attributed a psnr=44.08/sam=20.52/ergas=30.06 result to version2 -- that was a stale/unrelated run; version2's real current result is the entry above."
   },
   {
     "version": "V3",
+    "label": "V3VMambaPansharp (SpectralMambaBlock + SDIM + 4-stage U-Net)",
     "scale": 4,
-    "params": 0,
-    "psnr": 0,
-    "sam": 0,
-    "ergas": 0,
-    "inf_ms": 0
+    "params": 1523080,
+    "psnr": 47.3487372304879,
+    "sam": 6.614431105408014,
+    "ergas": 61.19585306504194,
+    "inf_ms": 38.9172250055708,
+    "source": "src/version3/comparison/results/summary_all.json ('v3' variant)"
   },
   {
     "version": "V4",
+    "label": "V4VMambaPansharp (ScaledSDIM + StrongReconHead + SpectralGradLoss)",
     "scale": 4,
-    "params": 0,
-    "psnr": 0,
-    "sam": 0,
-    "ergas": 0,
-    "inf_ms": 0
+    "params": 1532298,
+    "psnr": 49.367133645450366,
+    "sam": 6.32051608842962,
+    "ergas": 4.490199631335688,
+    "ssim": 0.9996625490196078,
+    "source": "src/version4/comparison/results/summary_all.json ('v4' variant, epoch 49)"
   },
   {
     "version": "V5",
+    "label": "V5VMambaPansharp (Hillis-Steele true parallel scan)",
     "scale": 4,
     "params": 1773898,
     "psnr": 43.33603167066387,
     "sam": 6.735641591689166,
     "ergas": 5.607865314857633,
-    "inf_ms": 0,
-    "run_dir": "version5\\comparison"
+    "source": "src/results/master_comparison.txt / version6/README.md evolution table",
+    "note": "A later run recorded in src/version5/comparison/results/comparison_results.json shows a better result (psnr=48.63, sam=6.38, ergas=5.41, ssim=0.9992) that was not yet propagated into the comparison tables used by version6/README.md. Flagging rather than silently picking one -- verify which checkpoint (comparison/checkpoints/v5_best.pth) corresponds to which run before citing a single number."
+  },
+  {
+    "version": "V6",
+    "label": "V6VMambaPansharp (n_groups=32, lambda_sam=0.40, alpha=0.05, beta=0.3)",
+    "scale": 4,
+    "params": 6780000,
+    "psnr": 47.69009576525007,
+    "sam": 2.640483851943697,
+    "ergas": 3.3327649448599135,
+    "ssim": 0.999761517857143,
+    "source": "psnr/sam/ergas/ssim from src/version6/comparison/results/v6_training_history.json (epoch 50, final); params from version6/README.md's architecture summary",
+    "note": "version6/README.md's evolution table listed this as 'TBD' -- filled in here from the actual training history. SAM of 2.64 degrees beats the 3.0-4.5 degree target."
   }
 ]

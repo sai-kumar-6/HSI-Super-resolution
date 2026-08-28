@@ -29,6 +29,7 @@ for p in [
     os.path.join(_PROJECT, 'version4'),
     _V5,
     _V6,
+    os.path.join(_V6, 'model'),
 ]:
     if p not in sys.path:
         sys.path.insert(0, p)

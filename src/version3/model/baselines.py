@@ -11,7 +11,6 @@ Variants
 
 import os
 import sys
-import importlib.util
 import torch
 import torch.nn as nn
 
@@ -22,25 +21,10 @@ sys.path.insert(0, _PROJECT)
 sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
 sys.path.insert(0, _HERE)
 
-
-def _load_module(name, filepath):
-    """Load a module by absolute file path under a unique sys.modules key
-    (every version's model file is now named model.py, so a plain
-    `import model` would collide across versions)."""
-    if name in sys.modules:
-        return sys.modules[name]
-    spec   = importlib.util.spec_from_file_location(name, filepath)
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[name] = module
-    spec.loader.exec_module(module)
-    return module
-
-
-_v1_model = _load_module('v1_model', os.path.join(_PROJECT, 'version1', 'model', 'model.py'))
-VMambaPansharp = _v1_model.VMambaPansharp
-
+# VMambaPansharp (V1) is duplicated into this version's own model.py, so this
+# is a plain same-version import, not a cross-version one.
+from model                    import VMambaPansharp, V3VMambaPansharp
 from vmamba_pansharp_improved import ImprovedVMambaPansharp
-from model                    import V3VMambaPansharp
 
 
 def count_parameters(model: nn.Module):

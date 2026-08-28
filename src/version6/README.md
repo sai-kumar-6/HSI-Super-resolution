@@ -40,19 +40,37 @@ V6 specifically targets SAM reduction through four coordinated changes:
 
 ```
 version6/
-├── vmamba_pansharp_v6.py        # Model architecture (V6VMambaPansharp)
-├── loss_functions_v6.py         # CompositeLossV6 (spectral-focused weights)
-├── baseline_models.py           # Factory: creates V1–V6 models
-├── run_experiment.py            # Training script
+├── requirements.txt              # This version's own dependencies
+├── model/
+│   ├── model.py                  # V6VMambaPansharp, plus V1/V3/V4/V5 classes it
+│   │                              #   builds on or offers as comparison baselines
+│   │                              #   (duplicated here — see note below)
+│   ├── losses.py                  # CompositeLossV6 (spectral-focused weights)
+│   └── baselines.py                # Factory: creates V1–V6 models
+├── baselines/                     # Classic (non-VMamba) baselines: PanNet, PanGAN,
+│   │                              #   PSGAN, Panformer — a separate comparison set
+│   ├── baseline_architectures.py
+│   ├── train_baselines.py
+│   └── compare_inference.py
+├── run_experiment.py             # Training script
+├── inference_visual.py           # Single-patch visual inference
 ├── comparison/
-│   ├── compare_all.py           # Compare V5 vs V6 side-by-side
-│   ├── checkpoints/             # Saved model weights (v6_best.pth)
-│   ├── results/                 # Training history JSON
-│   ├── metric_plots/            # Training curve plots
-│   └── saved_images/            # Visual output samples
+│   ├── compare_all.py             # Compare V1..V6 side-by-side
+│   ├── checkpoints/               # Saved model weights (v6_best.pth)
+│   ├── results/                   # Training history JSON
+│   ├── metric_plots/              # Training curve plots
+│   └── saved_images/              # Visual output samples
 └── testing/
-    └── test_chikusei.py         # Evaluation on Chikusei test set
+    └── test_chikusei.py          # Evaluation on Chikusei test set
 ```
+
+**Self-containment note:** this version's `model/model.py` physically contains V1's,
+V3's, V4's, and V5's classes (not just its own new ones) — duplicated in rather than
+imported from those version folders, so this `version6/` directory is independently
+runnable on its own. Only the shared, version-agnostic building blocks
+(`vmamba_pansharp_improved.py`, `loss_functions.py`, `dataset_loader_overlap.py` under
+`src/scripts/`) are still imported from outside this folder, since they aren't owned by
+any one version. See the root README for why that boundary was drawn there.
 
 **Shared files (project root):**
 ```
@@ -531,12 +549,16 @@ Even if absolute values are close, wrong slopes = wrong spectral signature.
 
 ## 8. Training & Testing Commands
 
+### Setup
+
+```bash
+cd src/version6
+pip install -r requirements.txt
+```
+
 ### Training (recommended)
 
 ```bash
-conda activate deepfake
-cd "c:\Users\s.saikumar\Desktop\Mtech project\version6"
-
 # Full training (recommended — batch_size=4 uses ~4-5 GB GPU memory)
 python run_experiment.py --epochs 200 --d_model 64 --patch_size 32 --scale 4 --batch_size 4
 
@@ -575,7 +597,7 @@ python testing/test_chikusei.py \
 ### Quick self-test (verify model runs)
 
 ```bash
-python vmamba_pansharp_v6.py
+python model/model.py
 ```
 
 Expected output:
@@ -590,16 +612,19 @@ Testing V6VMambaPansharp ...
 
 ---
 
-## 9. Expected Results
+## 9. Actual Results (epoch 50, final checkpoint)
 
 Based on V5 baseline (43.34 dB / 6.74° SAM) and the targeted improvements:
 
-| Metric | V5 (50 ep) | V6 Target | Direction |
-|---|---|---|---|
-| PSNR (dB) | 43.34 | ~43–45 | higher is better |
-| SAM (°) | 6.74 | **3.0–4.5** | lower is better |
-| ERGAS | 5.61 | ~4–6 | lower is better |
-| SSIM | 0.9622 | ~0.97–0.98 | higher is better |
+| Metric | V5 (50 ep) | V6 Target | V6 Actual | Direction |
+|---|---|---|---|---|
+| PSNR (dB) | 43.34 | ~43–45 | 47.69 | higher is better |
+| SAM (°) | 6.74 | 3.0–4.5 | **2.64** | lower is better |
+| ERGAS | 5.61 | ~4–6 | 3.33 | lower is better |
+| SSIM | 0.9622 | ~0.97–0.98 | 0.9998 | higher is better |
+
+SAM beat the target range outright, and PSNR/ERGAS/SSIM all improved over V5 too (source:
+`comparison/results/v6_training_history.json`, epoch 50).
 
 Note: Training on CPU is slow (~5–15 min/epoch for 999 patches). Use GPU (auto-detected) for reasonable training time (~30–90 sec/epoch on CUDA).
 
@@ -614,7 +639,14 @@ Note: Training on CPU is slow (~5–15 min/epoch for 999 patches). Use GPU (auto
 | V3 | SpectralMambaBlock + 4-stage U-Net | 47.35 | 6.61° | 1.52M |
 | V4 | Scaled SDIM (α) + StrongReconHead (β) + SpectralGradLoss | **49.37** | **6.32°** | 1.53M |
 | V5 | Hillis-Steele O(log L) true parallel scan | 43.34 | 6.74° | 1.77M |
-| **V6** | **n_groups=32 + λ_sam=0.40 + α=0.05 + β=0.3** | TBD | **target ~4°** | **6.78M** |
+| **V6** | **n_groups=32 + λ_sam=0.40 + α=0.05 + β=0.3** | **47.69** | **2.64°** | **6.78M** |
+
+*V1/V2/V3 rows above are from the shared comparison run in
+`version3/comparison/results/summary_all.json`. The V2 row specifically is
+`vmamba_pansharp_improved.py` (the reimplementation V3-V6 actually import from), not the
+separate `version2/` experiment — see `version2/README.md` for that one's own numbers
+(44.32 dB / 6.97° SAM at its own 50-epoch run) and `src/results/master_comparison.txt`
+for both side by side.*
 
 ---
 

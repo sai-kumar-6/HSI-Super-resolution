@@ -26,6 +26,7 @@ for p in [
     os.path.join(_PROJECT, 'version4'),
     _V5,
     _HERE,   # HIGHEST priority — version6/ wins
+    os.path.join(_HERE, 'model'),
 ]:
     if p not in sys.path:
         sys.path.insert(0, p)

@@ -33,7 +33,8 @@ for p in [_PROJECT, os.path.join(_PROJECT, 'scripts'), _V6, _V5,
           os.path.join(_PROJECT,'version1'),
           os.path.join(_PROJECT,'version3'),
           os.path.join(_PROJECT,'version4'),
-          _HERE]:
+          _HERE,
+          os.path.join(_V6, 'model')]:
     if p not in sys.path:
         sys.path.insert(0, p)
 

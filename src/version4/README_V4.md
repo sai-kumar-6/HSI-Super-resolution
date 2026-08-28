@@ -130,15 +130,35 @@ V4 adds ~14K params over V3:
 
 ---
 
+## Results (epoch 49, best checkpoint)
+
+| Metric | Value |
+|---|---|
+| PSNR (dB) | 49.37 |
+| SAM (°) | 6.32 |
+| ERGAS | 4.49 |
+| SSIM | 0.9997 |
+| Params | 1,532,298 |
+
+Source: `comparison/results/summary_all.json`. This is the best PSNR/SAM combination
+across all six versions to date — see `src/results/master_comparison.txt` for the
+cross-version comparison.
+
+---
+
 ## Folder Structure
 
 ```
 version4/
-├── vmamba_pansharp_v4.py          ← V4 model (2 new components)
-├── loss_functions_v4.py           ← SpectralGradientLoss + CompositeLossV4
-├── baseline_models.py             ← Factory: 'old'|'improved'|'v3'|'v4'
-├── dataset_loader.py              ← copy
-├── dataset_loader_overlap.py      ← copy
+├── requirements.txt               ← This version's own dependencies
+├── model/
+│   ├── model.py                   ← V4VMambaPansharp (2 new components), plus V1/V3
+│   │                                 classes it builds on or offers as comparison
+│   │                                 baselines (duplicated here — see note below)
+│   ├── losses.py                  ← SpectralGradientLoss + CompositeLossV4
+│   ├── baselines.py               ← Factory: 'old'|'improved'|'v3'|'v4'
+│   ├── dataset.py                 ← Own copy of the dataset loader
+│   └── dataset_overlap.py         ← Own copy of the overlap-patch dataset loader
 ├── run_experiment.py              ← MAIN RUNNER
 │
 ├── comparison/
@@ -168,12 +188,20 @@ version4/
 └── README_V4.md                   ← THIS FILE
 ```
 
+**Self-containment note:** `model/model.py` physically contains V1's and V3's classes
+it builds on (not just V4's own new ones) — duplicated in rather than imported from
+those version folders, so this `version4/` directory is independently runnable on its
+own. Only the shared, version-agnostic building blocks (`vmamba_pansharp_improved.py`
+under `src/scripts/`) are still imported from outside this folder, since it isn't owned
+by any one version.
+
 ---
 
 ## Quick Commands
 
 ```bash
 cd version4
+pip install -r requirements.txt
 
 # 0. Verify all 4 models load
 python run_experiment.py verify

@@ -33,7 +33,6 @@ Expected effect:
 from __future__ import annotations
 import os
 import sys
-import importlib.util
 
 _HERE    = os.path.dirname(os.path.abspath(__file__))   # version6/model/
 _PROJECT = os.path.dirname(os.path.dirname(_HERE))         # src/
@@ -43,20 +42,6 @@ sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
-
-def _load_module(name, filepath):
-    """Load a module by absolute file path under a unique sys.modules key
-    (every version's loss file is now named losses.py, so a plain
-    `import losses` would collide across versions)."""
-    if name in sys.modules:
-        return sys.modules[name]
-    spec   = importlib.util.spec_from_file_location(name, filepath)
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[name] = module
-    spec.loader.exec_module(module)
-    return module
-
 
 from loss_functions import (          # noqa: F401
     L1ReconstructionLoss,
@@ -69,8 +54,27 @@ from loss_functions import (          # noqa: F401
     compute_ssim,
 )
 
-_v4_losses = _load_module('v4_losses', os.path.join(_PROJECT, 'version4', 'model', 'losses.py'))
-SpectralGradientLoss = _v4_losses.SpectralGradientLoss
+
+# ============================================================================
+# Reused from Version 4 (src/version4/model/losses.py)
+# Duplicated here so this version's model/ folder is fully self-contained.
+# ============================================================================
+
+class SpectralGradientLoss(nn.Module):
+    """
+    Spectral Gradient Loss (V4 Fix 3).
+
+    Preserves the *shape* of spectral curves by matching band-to-band differences.
+
+    Formula:
+        ∇_c(H) = H[:, 1:, :, :] - H[:, :-1, :, :]   (adjacent-band differences)
+        L_spec  = || ∇_c(H_pred) - ∇_c(H_gt) ||_1
+    """
+
+    def forward(self, pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
+        pred_grad   = pred[:, 1:, :, :]   - pred[:, :-1, :, :]
+        target_grad = target[:, 1:, :, :] - target[:, :-1, :, :]
+        return F.l1_loss(pred_grad, target_grad)
 
 
 # ============================================================================

@@ -135,15 +135,34 @@ V3 is larger than V2 due to the 4-stage backbone, but smaller than V1. The extra
 
 ---
 
+## Results (best checkpoint)
+
+| Metric | Value |
+|---|---|
+| PSNR (dB) | 47.35 |
+| SAM (°) | 6.61 |
+| ERGAS | 61.20 |
+| Inference | 38.9 ms |
+| Params | 1,523,080 |
+
+Source: `comparison/results/summary_all.json` ('v3' variant). See
+`src/results/master_comparison.txt` for the cross-version comparison.
+
+---
+
 ## Folder Structure
 
 ```
 version3/
-├── vmamba_pansharp_v3.py          ← V3 model (3 new components)
-├── baseline_models.py             ← Factory: create_vmamba_model('old'|'improved'|'v3')
-├── dataset_loader.py              ← copy
-├── dataset_loader_overlap.py      ← copy
-├── loss_functions.py              ← copy
+├── requirements.txt               ← This version's own dependencies
+├── model/
+│   ├── model.py                   ← V3VMambaPansharp (3 new components), plus V1's
+│   │                                 classes it builds on or offers as a comparison
+│   │                                 baseline (duplicated here — see note below)
+│   ├── baselines.py               ← Factory: create_vmamba_model('old'|'improved'|'v3')
+│   ├── dataset.py                 ← Own copy of the dataset loader
+│   ├── dataset_overlap.py         ← Own copy of the overlap-patch dataset loader
+│   └── losses.py                  ← Own copy of the loss functions
 ├── run_experiment.py              ← MAIN RUNNER
 │
 ├── comparison/
@@ -162,12 +181,19 @@ version3/
 └── README_V3.md                   ← THIS FILE
 ```
 
+**Self-containment note:** `model/model.py` physically contains V1's classes it builds
+on (not just V3's own new ones) — duplicated in rather than imported from `version1/`,
+so this `version3/` directory is independently runnable on its own. Only the shared,
+version-agnostic building blocks (`vmamba_pansharp_improved.py` under `src/scripts/`)
+are still imported from outside this folder, since it isn't owned by any one version.
+
 ---
 
 ## Quick Commands
 
 ```bash
 cd version3
+pip install -r requirements.txt
 
 # 0. Verify all 3 models load
 python run_experiment.py verify

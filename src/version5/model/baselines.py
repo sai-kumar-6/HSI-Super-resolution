@@ -8,7 +8,7 @@ Factory that creates any of the 5 model variants:
   'v5'       → V5 VMamba with true parallel scan (vmamba_pansharp_v5.py)
 """
 from __future__ import annotations
-import os, sys, importlib.util
+import os, sys
 
 _HERE    = os.path.dirname(os.path.abspath(__file__))   # version5/model/
 _V5      = os.path.dirname(_HERE)                        # version5/
@@ -18,18 +18,10 @@ sys.path.insert(0, _PROJECT)
 sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
 sys.path.insert(0, _HERE)                               # own model/ — highest priority
 
-
-def _load_module(name, filepath):
-    """Load a module by absolute file path under a unique sys.modules key
-    (every version's model file is now named model.py, so a plain
-    `import model` would collide across versions)."""
-    if name in sys.modules:
-        return sys.modules[name]
-    spec   = importlib.util.spec_from_file_location(name, filepath)
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[name] = module
-    spec.loader.exec_module(module)
-    return module
+# VMambaPansharp (V1), V3VMambaPansharp (V3), and V4VMambaPansharp (V4) are
+# all duplicated into this version's own model.py, so this is a plain
+# same-version import, not a cross-version one.
+from model import VMambaPansharp, V3VMambaPansharp, V4VMambaPansharp, V5VMambaPansharp
 
 
 def create_vmamba_model(
@@ -47,8 +39,7 @@ def create_vmamba_model(
     variant = variant.lower()
 
     if variant == 'old':
-        _m = _load_module('v1_model', os.path.join(_PROJECT, 'version1', 'model', 'model.py'))
-        return _m.VMambaPansharp(
+        return VMambaPansharp(
             in_channels=in_ch, out_channels=out_ch,
             scale=scale, d_model=d_model,
             num_blocks=num_blocks,
@@ -61,22 +52,19 @@ def create_vmamba_model(
             num_blocks=num_blocks,
         )
     elif variant == 'v3':
-        _m = _load_module('v3_model', os.path.join(_PROJECT, 'version3', 'model', 'model.py'))
-        return _m.V3VMambaPansharp(
+        return V3VMambaPansharp(
             in_channels=in_ch, out_channels=out_ch,
             scale=scale, d_model=d_model, d_state=d_state,
             num_blocks=num_blocks,
         )
     elif variant == 'v4':
-        _m = _load_module('v4_model', os.path.join(_PROJECT, 'version4', 'model', 'model.py'))
-        return _m.V4VMambaPansharp(
+        return V4VMambaPansharp(
             in_channels=in_ch, out_channels=out_ch,
             scale=scale, d_model=d_model, d_state=d_state,
             num_blocks=num_blocks,
             alpha_init=0.1, beta_init=0.5,
         )
     elif variant == 'v5':
-        from model import V5VMambaPansharp
         return V5VMambaPansharp(
             in_channels=in_ch, out_channels=out_ch,
             scale=scale, d_model=d_model, d_state=d_state,

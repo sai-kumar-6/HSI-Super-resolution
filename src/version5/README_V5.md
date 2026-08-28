@@ -136,7 +136,8 @@ Upsample(2×): → (B,32,32,32)
 ## Running V5
 
 ```bash
-cd "version5"
+cd version5
+pip install -r requirements.txt
 
 # Verify all 5 models load correctly
 python run_experiment.py verify
@@ -156,6 +157,20 @@ python run_experiment.py compare --epochs 30
 python run_experiment.py visualize \
     --checkpoint_v5 comparison/checkpoints/v5_best.pth
 ```
+
+---
+
+## Results
+
+Two recorded runs give different numbers and haven't been reconciled yet:
+
+| Source | PSNR | SAM | ERGAS | SSIM |
+|---|---|---|---|---|
+| `comparison/results/comparison_results.json` | 48.63 | 6.38° | 5.41 | 0.9992 |
+| Used in `version6/README.md`'s evolution table | 43.34 | 6.74° | 5.61 | — |
+
+Before citing either number, check which `comparison/checkpoints/v5_best.pth` run they
+came from — see `src/results/master_comparison.txt` for the same flag at the project level.
 
 ---
 
@@ -186,9 +201,13 @@ See [3D_SCAN_ANALYSIS.md](3D_SCAN_ANALYSIS.md) for a detailed explanation of:
 
 ```
 version5/
-├── vmamba_pansharp_v5.py          ← V5 model (true parallel scan)
-├── baseline_models.py             ← Factory for all 5 variants
-├── loss_functions_v5.py           ← Re-exports V4 losses
+├── requirements.txt               ← This version's own dependencies
+├── model/
+│   ├── model.py                   ← V5VMambaPansharp (true parallel scan), plus
+│   │                                 V1/V3/V4 classes it builds on or offers as
+│   │                                 comparison baselines (duplicated here)
+│   ├── losses.py                  ← CompositeLossV5; re-exports + duplicates V4 losses
+│   └── baselines.py               ← Factory for all 5 variants
 ├── run_experiment.py              ← Main runner
 ├── 3D_SCAN_ANALYSIS.md            ← 3D scan explanation
 ├── README_V5.md                   ← This file
@@ -209,3 +228,11 @@ version5/
         ├── spectral_curves.png
         └── individual/            ← Per-variant prediction images
 ```
+
+**Self-containment note:** `model/model.py` and `model/losses.py` physically contain
+V1's, V3's, and V4's classes they build on (not just V5's own new ones) — duplicated in
+rather than imported from those version folders, so this `version5/` directory is
+independently runnable on its own. Only the shared, version-agnostic building blocks
+(`vmamba_pansharp_improved.py`, `loss_functions.py`, `dataset_loader_overlap.py` under
+`src/scripts/`) are still imported from outside this folder, since they aren't owned by
+any one version.
