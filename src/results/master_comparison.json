@@ -1,0 +1,40 @@
+[
+  {
+    "version": "V2",
+    "scale": 4,
+    "params": 741352,
+    "psnr": 44.08236906368738,
+    "sam": 20.516345532892952,
+    "ergas": 30.062788806541388,
+    "inf_ms": 56.68,
+    "run_dir": "version2\\runs\\scale4"
+  },
+  {
+    "version": "V3",
+    "scale": 4,
+    "params": 0,
+    "psnr": 0,
+    "sam": 0,
+    "ergas": 0,
+    "inf_ms": 0
+  },
+  {
+    "version": "V4",
+    "scale": 4,
+    "params": 0,
+    "psnr": 0,
+    "sam": 0,
+    "ergas": 0,
+    "inf_ms": 0
+  },
+  {
+    "version": "V5",
+    "scale": 4,
+    "params": 1773898,
+    "psnr": 43.33603167066387,
+    "sam": 6.735641591689166,
+    "ergas": 5.607865314857633,
+    "inf_ms": 0,
+    "run_dir": "version5\\comparison"
+  }
+]

@@ -1,0 +1,28 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# --- Datasets & large binary artifacts ---
+*.mat
+*.npy
+*.npz
+*.zip
+*.pth
+*.pt
+*.ckpt
+*.h5
+
+# --- Training/experiment outputs (regenerable) ---
+**/checkpoints/
+**/experiments/
+**/comparison_results/
+**/runs/
+**/old_folders/

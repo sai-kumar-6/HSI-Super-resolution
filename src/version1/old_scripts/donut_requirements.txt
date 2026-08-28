@@ -1,0 +1,13 @@
+# Requirements for Donut Key-Value Extraction
+
+# Core dependencies
+torch>=2.0.0
+transformers>=4.30.0
+pillow>=9.0.0
+
+# Optional but recommended
+sentencepiece>=0.1.99
+protobuf>=3.20.0
+
+# For better performance (optional)
+accelerate>=0.20.0

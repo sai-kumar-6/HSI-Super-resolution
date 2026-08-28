@@ -1,0 +1,12 @@
+[
+  {
+    "variant": "v5",
+    "label": "V5 VMamba (True Parallel Scan)",
+    "params": 1773898,
+    "best_psnr": 48.62865657432407,
+    "best_sam": 6.382904443086362,
+    "best_ergas": 5.408315985810523,
+    "best_ssim": 0.9991777450980389,
+    "checkpoint": "C:\\Users\\s.saikumar\\Desktop\\Mtech project\\version5\\comparison\\checkpoints\\v5_best.pth"
+  }
+]
