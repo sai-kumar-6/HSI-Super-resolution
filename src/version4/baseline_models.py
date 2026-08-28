@@ -18,6 +18,7 @@ import torch.nn as nn
 _HERE    = os.path.dirname(os.path.abspath(__file__))
 _PROJECT = os.path.dirname(_HERE)
 sys.path.insert(0, _PROJECT)
+sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
 sys.path.insert(0, os.path.join(_PROJECT, 'version3'))
 
 from vmamba_pansharp          import VMambaPansharp

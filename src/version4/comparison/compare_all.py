@@ -23,6 +23,7 @@ _V4      = os.path.dirname(_HERE)
 _PROJECT = os.path.dirname(_V4)
 sys.path.insert(0, os.path.join(_PROJECT, 'version3'))  # lowest priority
 sys.path.insert(0, _PROJECT)
+sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
 sys.path.insert(0, _V4)                                  # highest priority — version4 baseline_models wins
 
 import torch

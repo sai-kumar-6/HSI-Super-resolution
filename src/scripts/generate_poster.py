@@ -25,7 +25,7 @@ import matplotlib.gridspec as gridspec
 from matplotlib.patches import FancyBboxPatch
 from matplotlib.lines import Line2D
 
-_HERE = os.path.dirname(os.path.abspath(__file__))
+_HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # ── Resolve figure paths ────────────────────────────────────────────────────
 FIG_MASTER_CHART   = os.path.join(_HERE, 'results', 'master_comparison_chart.png')

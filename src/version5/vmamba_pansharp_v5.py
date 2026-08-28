@@ -81,6 +81,7 @@ _PROJECT = os.path.dirname(_HERE)
 sys.path.insert(0, os.path.join(_PROJECT, 'version3'))
 sys.path.insert(0, os.path.join(_PROJECT, 'version4'))
 sys.path.insert(0, _PROJECT)
+sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
 sys.path.insert(0, _HERE)
 
 from vmamba_pansharp_improved import ImprovedHSIEncoder, ImprovedPANEncoder

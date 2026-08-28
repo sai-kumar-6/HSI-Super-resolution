@@ -11,7 +11,7 @@ from openpyxl.styles import (Font, PatternFill, Alignment, Border, Side,
 from openpyxl.utils import get_column_letter
 from openpyxl.formatting.rule import ColorScaleRule
 
-HERE    = os.path.dirname(os.path.abspath(__file__))
+HERE    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 JSON    = os.path.join(HERE, 'version5', 'comparison', 'results', 'v5_training_history.json')
 OUT     = os.path.join(HERE, 'version5', 'comparison', 'results', 'v5_training_history.xlsx')
 

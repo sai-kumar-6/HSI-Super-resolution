@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import numpy as np
 
-_PROJECT  = os.path.dirname(os.path.abspath(__file__))
+_PROJECT  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HIST_PATH = os.path.join(_PROJECT, 'version6', 'comparison', 'results', 'v6_training_history.json')
 OUT_DIR   = os.path.join(_PROJECT, 'version6', 'v6_metric_plots')
 LABEL     = 'V6 VMamba — Spectral-Focused Loss'

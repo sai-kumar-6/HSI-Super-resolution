@@ -16,6 +16,7 @@ _PROJECT = os.path.dirname(_HERE)
 # Path priority: version5 wins (inserted last → index 0)
 sys.path.insert(0, os.path.join(_PROJECT, 'version3'))  # lowest priority
 sys.path.insert(0, _PROJECT)
+sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
 sys.path.insert(0, os.path.join(_PROJECT, 'version4'))
 sys.path.insert(0, _HERE)                               # highest priority
 

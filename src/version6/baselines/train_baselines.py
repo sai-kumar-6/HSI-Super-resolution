@@ -26,7 +26,7 @@ _HERE    = os.path.dirname(os.path.abspath(__file__))
 _V6      = os.path.dirname(_HERE)
 _PROJECT = os.path.dirname(_V6)
 
-for p in [_PROJECT, _V6,
+for p in [_PROJECT, os.path.join(_PROJECT, 'scripts'), _V6,
           os.path.join(_PROJECT,'version1'),
           os.path.join(_PROJECT,'version3'),
           os.path.join(_PROJECT,'version4'),

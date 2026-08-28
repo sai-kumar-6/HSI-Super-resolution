@@ -23,16 +23,19 @@ self-contained snapshot under `src/`.
     ├── chikusei/               Dataset folder (data files are git-ignored, see below)
     ├── results/                Cross-version comparison summaries
     ├── training_plots/         Training curve plots
-    ├── dataset_loader_overlap.py, loss_functions.py, vmamba_pansharp_improved.py
-    │                           Shared modules used by later versions
-    └── train_all_versions.py, generate_poster.py, generate_architecture_diagram.py,
-        json_to_excel.py, plot_*.py, regenerate_metric_plots.py
+    └── scripts/                Shared modules and cross-version orchestration scripts
+        ├── dataset_loader_overlap.py, loss_functions.py, vmamba_pansharp_improved.py
+        │                       Shared modules imported by version3-6
+        └── train_all_versions.py, generate_poster.py, generate_architecture_diagram.py,
+            json_to_excel.py, plot_*.py, regenerate_metric_plots.py
                                 Cross-version orchestration/reporting scripts
 ```
 
 Each `version*` script resolves its project root dynamically as its own parent directory,
 so the whole `src/` cluster must stay together as-is — that's why the code and data live
-in one nested folder while `docs/` stays at the top level.
+in one nested folder while `docs/` stays at the top level. `scripts/` sits as a sibling of
+`version1`..`version6` for the same reason: each version's `sys.path` setup adds
+`src/scripts` alongside its own folder so it can still resolve the shared modules.
 
 ## Version history
 

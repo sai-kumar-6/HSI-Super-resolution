@@ -11,7 +11,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 # ── Load data ─────────────────────────────────────────────────────────────────
-HERE    = os.path.dirname(os.path.abspath(__file__))
+HERE    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 JSON    = os.path.join(HERE, 'version5', 'comparison', 'results', 'v5_training_history.json')
 OUT_DIR = os.path.join(HERE, 'training_plots', 'v5')
 os.makedirs(OUT_DIR, exist_ok=True)

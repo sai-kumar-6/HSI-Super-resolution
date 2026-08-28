@@ -28,7 +28,7 @@ _PROJECT = os.path.dirname(_HERE)
 _V5      = os.path.join(_PROJECT, 'version5')
 
 for p in [os.path.join(_PROJECT,'version1'), os.path.join(_PROJECT,'version3'),
-          _PROJECT, os.path.join(_PROJECT,'version4'), _V5, _HERE]:
+          _PROJECT, os.path.join(_PROJECT, 'scripts'), os.path.join(_PROJECT,'version4'), _V5, _HERE]:
     if p not in sys.path:
         sys.path.insert(0, p)
 

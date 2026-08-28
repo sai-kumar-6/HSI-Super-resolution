@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import numpy as np
 
-_PROJECT = os.path.dirname(os.path.abspath(__file__))
+_PROJECT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 CONFIGS = [
     {

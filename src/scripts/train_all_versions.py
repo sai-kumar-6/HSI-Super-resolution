@@ -43,7 +43,7 @@ import argparse
 import subprocess
 from datetime import datetime
 
-_HERE = os.path.dirname(os.path.abspath(__file__))
+_HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def _progress(step, total, label, t_start):
     """Print a simple progress line: [step/total] label  elapsed"""

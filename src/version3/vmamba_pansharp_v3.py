@@ -56,6 +56,7 @@ import torch.nn.functional as F
 _HERE    = os.path.dirname(os.path.abspath(__file__))
 _PROJECT = os.path.dirname(_HERE)
 sys.path.insert(0, _PROJECT)
+sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
 
 from vmamba_pansharp import (
     SelectiveSSMOptimized,

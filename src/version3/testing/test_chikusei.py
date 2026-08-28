@@ -27,6 +27,7 @@ _HERE    = os.path.dirname(os.path.abspath(__file__))
 _V3      = os.path.dirname(_HERE)
 _PROJECT = os.path.dirname(_V3)
 sys.path.insert(0, _PROJECT)
+sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
 sys.path.insert(0, _V3)
 
 import torch

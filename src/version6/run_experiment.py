@@ -22,6 +22,7 @@ for p in [
     os.path.join(_PROJECT, 'version1'),
     os.path.join(_PROJECT, 'version3'),
     _PROJECT,
+    os.path.join(_PROJECT, 'scripts'),
     os.path.join(_PROJECT, 'version4'),
     _V5,
     _HERE,   # HIGHEST priority — version6/ wins

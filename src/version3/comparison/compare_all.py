@@ -34,6 +34,7 @@ _HERE    = os.path.dirname(os.path.abspath(__file__))
 _PROJECT = os.path.dirname(os.path.dirname(_HERE))   # Mtech project root
 _V3      = os.path.dirname(_HERE)                    # version3 folder
 sys.path.insert(0, _PROJECT)
+sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
 sys.path.insert(0, _V3)
 
 import torch

@@ -43,7 +43,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import numpy as np
 
-_HERE    = os.path.dirname(os.path.abspath(__file__))
+_HERE    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_DIR  = os.path.join(_HERE, 'training_plots')
 
 # Colour per variant (matches compare_all.py)
