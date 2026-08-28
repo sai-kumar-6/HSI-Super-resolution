@@ -1,5 +1,5 @@
 """
-vmamba_pansharp_v3.py  —  Version 3 (V3)
+model.py  —  Version 3 (V3)
 M.Tech Thesis: Hyperspectral Image Pansharpening
 
 Three NEW improvements over V2
@@ -49,20 +49,38 @@ Reused from V2 (unchanged):
 
 import os
 import sys
+import importlib.util
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-_HERE    = os.path.dirname(os.path.abspath(__file__))
-_PROJECT = os.path.dirname(_HERE)
+_HERE    = os.path.dirname(os.path.abspath(__file__))   # version3/model/
+_V3      = os.path.dirname(_HERE)                        # version3/
+_PROJECT = os.path.dirname(_V3)                           # src/
 sys.path.insert(0, _PROJECT)
 sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
 
-from vmamba_pansharp import (
-    SelectiveSSMOptimized,
-    MambaVisionBlockOptimized,
-    ReconstructionHead,
-)
+
+def _load_module(name, filepath):
+    """Load a module by absolute file path under a unique sys.modules key.
+
+    Needed because every version's model file is now named model.py — a
+    plain `import model` would collide across versions.
+    """
+    if name in sys.modules:
+        return sys.modules[name]
+    spec   = importlib.util.spec_from_file_location(name, filepath)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+_v1_model = _load_module('v1_model', os.path.join(_PROJECT, 'version1', 'model', 'model.py'))
+SelectiveSSMOptimized      = _v1_model.SelectiveSSMOptimized
+MambaVisionBlockOptimized  = _v1_model.MambaVisionBlockOptimized
+ReconstructionHead         = _v1_model.ReconstructionHead
+
 from vmamba_pansharp_improved import (
     ImprovedHSIEncoder,
     ImprovedPANEncoder,

@@ -1,5 +1,5 @@
 """
-vmamba_pansharp_v4.py  —  Version 4 (V4)
+model.py  —  Version 4 (V4)
 M.Tech Thesis: Hyperspectral Image Pansharpening
 
 Four NEW fixes over V3 (addressing spectral distortion issues)
@@ -45,25 +45,40 @@ Reused from V3 (unchanged):
 
 import os
 import sys
+import importlib.util
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-_HERE    = os.path.dirname(os.path.abspath(__file__))
-_PROJECT = os.path.dirname(_HERE)
+_HERE    = os.path.dirname(os.path.abspath(__file__))   # version4/model/
+_V4      = os.path.dirname(_HERE)                        # version4/
+_PROJECT = os.path.dirname(_V4)                           # src/
 sys.path.insert(0, _PROJECT)
 sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
-sys.path.insert(0, os.path.join(_PROJECT, 'version3'))
+
+
+def _load_module(name, filepath):
+    """Load a module by absolute file path under a unique sys.modules key
+    (every version's model file is now named model.py, so a plain
+    `import model` would collide across versions)."""
+    if name in sys.modules:
+        return sys.modules[name]
+    spec   = importlib.util.spec_from_file_location(name, filepath)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
 
 from vmamba_pansharp_improved import (
     ImprovedHSIEncoder,
     ImprovedPANEncoder,
 )
-from vmamba_pansharp_v3 import (
-    SpectralSSM1D,
-    SpectralSpatialMambaBlock,
-    MultiScaleSpectralBackbone,
-)
+
+_v3_model = _load_module('v3_model', os.path.join(_PROJECT, 'version3', 'model', 'model.py'))
+SpectralSSM1D             = _v3_model.SpectralSSM1D
+SpectralSpatialMambaBlock = _v3_model.SpectralSpatialMambaBlock
+MultiScaleSpectralBackbone = _v3_model.MultiScaleSpectralBackbone
 
 
 # ============================================================================

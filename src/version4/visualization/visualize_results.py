@@ -34,6 +34,7 @@ sys.path.insert(0, os.path.join(_PROJECT, 'version3'))  # lowest priority
 sys.path.insert(0, _PROJECT)
 sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
 sys.path.insert(0, _V4)                                  # highest priority
+sys.path.insert(0, os.path.join(_V4, 'model'))
 
 import torch
 import torch.nn.functional as F
@@ -47,9 +48,9 @@ except ImportError:
     print("[WARN] matplotlib not found — no plots will be generated")
     HAS_MPL = False
 
-from dataset_loader_overlap import create_dataloaders_overlap
-from baseline_models import create_vmamba_model, count_parameters
-from loss_functions_v4 import compute_psnr, compute_sam_metric, compute_ergas
+from dataset_overlap import create_dataloaders_overlap
+from baselines       import create_vmamba_model, count_parameters
+from losses          import compute_psnr, compute_sam_metric, compute_ergas
 
 CHIKUSEI_PATH = os.path.join(_PROJECT, 'chikusei', 'chikusei.mat')
 OUT_DIR       = os.path.join(_HERE, 'outputs')

@@ -29,6 +29,7 @@ _PROJECT = os.path.dirname(_V3)
 sys.path.insert(0, _PROJECT)
 sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
 sys.path.insert(0, _V3)
+sys.path.insert(0, os.path.join(_V3, 'model'))
 
 import torch
 from torch.utils.data import DataLoader
@@ -38,9 +39,9 @@ try:
 except ImportError:
     def tqdm(x, **kw): return x
 
-from dataset_loader_overlap import create_dataloaders_overlap
-from baseline_models import create_vmamba_model, count_parameters
-from loss_functions  import compute_psnr, compute_sam_metric, compute_ergas
+from dataset_overlap import create_dataloaders_overlap
+from baselines       import create_vmamba_model, count_parameters
+from losses          import compute_psnr, compute_sam_metric, compute_ergas
 
 # ── Config ───────────────────────────────────────────────────────────────────
 CHIKUSEI_PATH = os.path.join(_PROJECT, 'chikusei', 'chikusei.mat')

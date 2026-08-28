@@ -1,18 +1,31 @@
 """
-loss_functions_v5.py  --  V5 Edition
+losses.py  --  V5 Edition
 Imports base losses from project root and V4's SpectralGradientLoss + CompositeLossV4.
 CompositeLossV5 is an alias for CompositeLossV4 (same objectives, improved scan only).
 """
 from __future__ import annotations
 import os
 import sys
+import importlib.util
 
-_HERE    = os.path.dirname(os.path.abspath(__file__))
-_PROJECT = os.path.dirname(_HERE)
-_V4      = os.path.join(_PROJECT, 'version4')
+_HERE    = os.path.dirname(os.path.abspath(__file__))   # version5/model/
+_PROJECT = os.path.dirname(os.path.dirname(_HERE))         # src/
 sys.path.insert(0, _PROJECT)
 sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
-sys.path.insert(0, _V4)
+
+
+def _load_module(name, filepath):
+    """Load a module by absolute file path under a unique sys.modules key
+    (every version's loss file is now named losses.py, so a plain
+    `import losses` would collide across versions)."""
+    if name in sys.modules:
+        return sys.modules[name]
+    spec   = importlib.util.spec_from_file_location(name, filepath)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
 
 from loss_functions import (          # noqa: F401
     L1ReconstructionLoss,
@@ -24,10 +37,10 @@ from loss_functions import (          # noqa: F401
     compute_ergas,
     compute_ssim,
 )
-from loss_functions_v4 import (       # noqa: F401
-    SpectralGradientLoss,
-    CompositeLossV4,
-)
+
+_v4_losses = _load_module('v4_losses', os.path.join(_PROJECT, 'version4', 'model', 'losses.py'))
+SpectralGradientLoss = _v4_losses.SpectralGradientLoss
+CompositeLossV4      = _v4_losses.CompositeLossV4
 
 # Alias
 CompositeLossV5 = CompositeLossV4

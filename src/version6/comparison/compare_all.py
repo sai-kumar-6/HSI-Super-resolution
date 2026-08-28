@@ -42,9 +42,9 @@ def _load_module(name, filepath):
 
 
 # Explicit V6 module loads
-_bm = _load_module('baseline_models_v6',    os.path.join(_V6, 'baseline_models.py'))
-_lf = _load_module('loss_functions_v6_mod', os.path.join(_V6, 'loss_functions_v6.py'))
-_lf5 = _load_module('loss_functions_v5_mod', os.path.join(_V5, 'loss_functions_v5.py'))
+_bm = _load_module('baseline_models_v6',    os.path.join(_V6, 'model', 'baselines.py'))
+_lf = _load_module('loss_functions_v6_mod', os.path.join(_V6, 'model', 'losses.py'))
+_lf5 = _load_module('loss_functions_v5_mod', os.path.join(_V5, 'model', 'losses.py'))
 
 create_vmamba_model = _bm.create_vmamba_model
 count_parameters    = _bm.count_parameters

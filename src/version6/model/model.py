@@ -1,5 +1,5 @@
 """
-vmamba_pansharp_v6.py  —  Version 6
+model.py  —  Version 6
 M.Tech Thesis: Hyperspectral Image Pansharpening
 
 V6: Spectral-Focused Architecture + Loss (SAM Reduction)
@@ -51,34 +51,46 @@ ARCHITECTURE SUMMARY
 
 import os
 import sys
+import importlib.util
 
-_HERE    = os.path.dirname(os.path.abspath(__file__))
-_PROJECT = os.path.dirname(_HERE)
-_V5      = os.path.join(_PROJECT, 'version5')
+_HERE    = os.path.dirname(os.path.abspath(__file__))   # version6/model/
+_V6      = os.path.dirname(_HERE)                        # version6/
+_PROJECT = os.path.dirname(_V6)                           # src/
 
-sys.path.insert(0, os.path.join(_PROJECT, 'version1'))
-sys.path.insert(0, os.path.join(_PROJECT, 'version3'))
 sys.path.insert(0, _PROJECT)
 sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
-sys.path.insert(0, os.path.join(_PROJECT, 'version4'))
-sys.path.insert(0, _V5)
-sys.path.insert(0, _HERE)
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+
+def _load_module(name, filepath):
+    """Load a module by absolute file path under a unique sys.modules key
+    (every version's model file is now named model.py, so a plain
+    `import model` would collide across versions)."""
+    if name in sys.modules:
+        return sys.modules[name]
+    spec   = importlib.util.spec_from_file_location(name, filepath)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
 # Reuse scan core + spatial components from V5 (unchanged)
-from vmamba_pansharp_v5 import (
-    hillis_steele_scan,
-    TrueParallelSelectiveSSM,
-    TrueParallelSS2D,
-    V5VMambaPansharp,
-)
+_v5_model = _load_module('v5_model', os.path.join(_PROJECT, 'version5', 'model', 'model.py'))
+hillis_steele_scan        = _v5_model.hillis_steele_scan
+TrueParallelSelectiveSSM  = _v5_model.TrueParallelSelectiveSSM
+TrueParallelSS2D          = _v5_model.TrueParallelSS2D
+V5VMambaPansharp          = _v5_model.V5VMambaPansharp
 
 # Reuse encoders and heads from V2/V4
 from vmamba_pansharp_improved import ImprovedHSIEncoder, ImprovedPANEncoder
-from vmamba_pansharp_v4 import ScaledSpatialDetailInjection, StrongReconstructionHead
+
+_v4_model = _load_module('v4_model', os.path.join(_PROJECT, 'version4', 'model', 'model.py'))
+ScaledSpatialDetailInjection = _v4_model.ScaledSpatialDetailInjection
+StrongReconstructionHead     = _v4_model.StrongReconstructionHead
 
 
 # =============================================================================
@@ -348,7 +360,7 @@ if __name__ == '__main__':
     print(f"  LR (64x64) -> OUT (256x256)  [OK]")
 
     # Loss test
-    from loss_functions_v6 import CompositeLossV6
+    from losses import CompositeLossV6
     criterion = CompositeLossV6()
     pred = torch.rand(1, 128, 128, 128)
     gt   = torch.rand(1, 128, 128, 128)

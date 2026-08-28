@@ -17,8 +17,14 @@ self-contained snapshot under `src/`.
 ├── requirements.txt
 └── src/
     ├── version1 .. version6/  One folder per architecture iteration
-    │   (model, dataset loader, loss functions, training/comparison/testing scripts;
-    │    see each version's own README for what changed and how to run it)
+    │   ├── model/              model.py, dataset.py, losses.py, baselines.py
+    │   │                       (naming is consistent across versions; see below
+    │   │                        for how identically-named files coexist)
+    │   ├── run_experiment.py   Training/testing entrypoint
+    │   ├── comparison/         compare_all.py + checkpoints/, plots/, results/
+    │   ├── testing/            test_chikusei.py + results/
+    │   └── visualization/      visualize_results.py + outputs/
+    │   (see each version's own README for what changed and how to run it)
     ├── v1v2_comparison/        Head-to-head comparison harness for v1 vs v2
     ├── chikusei/               Dataset folder (data files are git-ignored, see below)
     ├── results/                Cross-version comparison summaries
@@ -36,6 +42,16 @@ so the whole `src/` cluster must stay together as-is — that's why the code and
 in one nested folder while `docs/` stays at the top level. `scripts/` sits as a sibling of
 `version1`..`version6` for the same reason: each version's `sys.path` setup adds
 `src/scripts` alongside its own folder so it can still resolve the shared modules.
+
+Every version's `model/` folder uses the same file names (`model.py`, `dataset.py`,
+`losses.py`, `baselines.py`) for consistency. Because several versions build on earlier
+ones directly (v4 reuses v3's model classes, v5 reuses v3/v4, v6 reuses v1/v4/v5), a plain
+`import model` can't disambiguate which version's file is meant once more than one is on
+`sys.path` at once. Same-version references stay as ordinary imports; any cross-version
+reference (e.g. v6 pulling in v4's `ScaledSpatialDetailInjection`) loads the target file by
+absolute path under a unique `sys.modules` key instead (a small `_load_module` helper
+repeated in each file that needs it — see `version6/model/baselines.py` for the fullest
+example, which combines classes from all six versions for its comparison table).
 
 ## Version history
 

@@ -44,6 +44,7 @@ import time
 _HERE    = os.path.dirname(os.path.abspath(__file__))
 _PROJECT = os.path.dirname(_HERE)
 sys.path.insert(0, _HERE)
+sys.path.insert(0, os.path.join(_HERE, 'model'))
 
 
 def run_cmd(cmd: list):
@@ -159,8 +160,8 @@ def cmd_visualize(args):
     import torch
     import torch.nn.functional as F
     from model        import V2VMambaPansharp
-    from dataset_loader import create_dataloaders
-    from loss_functions import compute_psnr, compute_sam, compute_ergas
+    from dataset      import create_dataloaders
+    from losses       import compute_psnr, compute_sam, compute_ergas
     from logger       import ExperimentLogger
 
     CHIKUSEI = os.path.join(_PROJECT, 'chikusei', 'chikusei.mat')

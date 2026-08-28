@@ -1,5 +1,5 @@
 """
-loss_functions_v6.py  —  Version 6 Edition
+losses.py  —  Version 6 Edition
 M.Tech Thesis: Hyperspectral Image Pansharpening
 
 V6 Change: Spectral-Focused Loss Weights
@@ -33,17 +33,30 @@ Expected effect:
 from __future__ import annotations
 import os
 import sys
+import importlib.util
 
-_HERE    = os.path.dirname(os.path.abspath(__file__))
-_PROJECT = os.path.dirname(_HERE)
-_V4      = os.path.join(_PROJECT, 'version4')
+_HERE    = os.path.dirname(os.path.abspath(__file__))   # version6/model/
+_PROJECT = os.path.dirname(os.path.dirname(_HERE))         # src/
 sys.path.insert(0, _PROJECT)
 sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
-sys.path.insert(0, _V4)
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
+
+def _load_module(name, filepath):
+    """Load a module by absolute file path under a unique sys.modules key
+    (every version's loss file is now named losses.py, so a plain
+    `import losses` would collide across versions)."""
+    if name in sys.modules:
+        return sys.modules[name]
+    spec   = importlib.util.spec_from_file_location(name, filepath)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
 
 from loss_functions import (          # noqa: F401
     L1ReconstructionLoss,
@@ -55,9 +68,9 @@ from loss_functions import (          # noqa: F401
     compute_ergas,
     compute_ssim,
 )
-from loss_functions_v4 import (       # noqa: F401
-    SpectralGradientLoss,
-)
+
+_v4_losses = _load_module('v4_losses', os.path.join(_PROJECT, 'version4', 'model', 'losses.py'))
+SpectralGradientLoss = _v4_losses.SpectralGradientLoss
 
 
 # ============================================================================

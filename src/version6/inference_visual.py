@@ -42,8 +42,8 @@ def _load(name, path):
     return m
 
 
-_bm = _load('baseline_models_v6',    os.path.join(_HERE, 'baseline_models.py'))
-_lf = _load('loss_functions_v6_mod', os.path.join(_HERE, 'loss_functions_v6.py'))
+_bm = _load('baseline_models_v6',    os.path.join(_HERE, 'model', 'baselines.py'))
+_lf = _load('loss_functions_v6_mod', os.path.join(_HERE, 'model', 'losses.py'))
 
 create_vmamba_model = _bm.create_vmamba_model
 compute_psnr        = _lf.compute_psnr

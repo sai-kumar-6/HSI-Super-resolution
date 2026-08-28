@@ -6,17 +6,13 @@ Uses explicit file-path loading to avoid sys.path shadowing.
 from __future__ import annotations
 import os, sys, importlib.util
 
-_HERE    = os.path.dirname(os.path.abspath(__file__))
-_PROJECT = os.path.dirname(_HERE)
-_V5      = os.path.join(_PROJECT, 'version5')
+_HERE    = os.path.dirname(os.path.abspath(__file__))   # version6/model/
+_V6      = os.path.dirname(_HERE)                         # version6/
+_PROJECT = os.path.dirname(_V6)                            # src/
 
 for p in [
-    os.path.join(_PROJECT, 'version1'),
-    os.path.join(_PROJECT, 'version3'),
     _PROJECT,
     os.path.join(_PROJECT, 'scripts'),
-    os.path.join(_PROJECT, 'version4'),
-    _V5,
     _HERE,
 ]:
     if p not in sys.path:
@@ -49,8 +45,8 @@ def create_vmamba_model(
     variant = variant.lower()
 
     if variant == 'old':
-        from vmamba_pansharp import VMambaPansharp
-        return VMambaPansharp(
+        _m = _load_module('v1_model', os.path.join(_PROJECT, 'version1', 'model', 'model.py'))
+        return _m.VMambaPansharp(
             in_channels=in_ch, out_channels=out_ch,
             scale=scale, d_model=d_model, num_blocks=num_blocks,
         )
@@ -61,29 +57,29 @@ def create_vmamba_model(
             scale=scale, d_model=d_model, d_state=d_state, num_blocks=num_blocks,
         )
     elif variant == 'v3':
-        from vmamba_pansharp_v3 import V3VMambaPansharp
-        return V3VMambaPansharp(
+        _m = _load_module('v3_model', os.path.join(_PROJECT, 'version3', 'model', 'model.py'))
+        return _m.V3VMambaPansharp(
             in_channels=in_ch, out_channels=out_ch,
             scale=scale, d_model=d_model, d_state=d_state, num_blocks=num_blocks,
         )
     elif variant == 'v4':
-        from vmamba_pansharp_v4 import V4VMambaPansharp
-        return V4VMambaPansharp(
+        _m = _load_module('v4_model', os.path.join(_PROJECT, 'version4', 'model', 'model.py'))
+        return _m.V4VMambaPansharp(
             in_channels=in_ch, out_channels=out_ch,
             scale=scale, d_model=d_model, d_state=d_state,
             num_blocks=num_blocks, alpha_init=0.1, beta_init=0.5,
         )
     elif variant == 'v5':
-        from vmamba_pansharp_v5 import V5VMambaPansharp
-        return V5VMambaPansharp(
+        _m = _load_module('v5_model', os.path.join(_PROJECT, 'version5', 'model', 'model.py'))
+        return _m.V5VMambaPansharp(
             in_channels=in_ch, out_channels=out_ch,
             scale=scale, d_model=d_model, d_state=d_state,
             num_blocks=num_blocks, alpha_init=0.1, beta_init=0.5,
         )
     elif variant == 'v6':
-        # Explicit file load — guarantees version6/vmamba_pansharp_v6.py is used
-        _m = _load_module('vmamba_pansharp_v6',
-                          os.path.join(_HERE, 'vmamba_pansharp_v6.py'))
+        # Explicit file load — guarantees version6/model/model.py is used
+        _m = _load_module('v6_model',
+                          os.path.join(_HERE, 'model.py'))
         return _m.V6VMambaPansharp(
             in_channels=in_ch, out_channels=out_ch,
             scale=scale, d_model=d_model, d_state=d_state,

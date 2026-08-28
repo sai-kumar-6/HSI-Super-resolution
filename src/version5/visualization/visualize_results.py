@@ -30,6 +30,7 @@ sys.path.insert(0, _PROJECT)
 sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
 sys.path.insert(0, os.path.join(_PROJECT, 'version4'))
 sys.path.insert(0, _V5)                                  # highest priority
+sys.path.insert(0, os.path.join(_V5, 'model'))
 
 import torch
 import torch.nn.functional as F
@@ -44,8 +45,8 @@ except ImportError:
     HAS_MPL = False
 
 from dataset_loader_overlap import create_dataloaders_overlap
-from baseline_models import create_vmamba_model, count_parameters
-from loss_functions_v5 import compute_psnr, compute_sam_metric, compute_ergas
+from baselines       import create_vmamba_model, count_parameters
+from losses          import compute_psnr, compute_sam_metric, compute_ergas
 
 CHIKUSEI_PATH = os.path.join(_PROJECT, 'chikusei', 'chikusei.mat')
 OUT_DIR   = os.path.join(_HERE, 'outputs')

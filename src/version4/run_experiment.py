@@ -53,6 +53,7 @@ sys.path.insert(0, os.path.join(_PROJECT, 'version3'))
 sys.path.insert(0, _PROJECT)
 sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
 sys.path.insert(0, _HERE)   # version4 wins over version3 for baseline_models
+sys.path.insert(0, os.path.join(_HERE, 'model'))
 
 import subprocess
 
@@ -109,7 +110,7 @@ def main():
 
     if args.command == 'verify':
         import torch
-        from baseline_models import create_vmamba_model, count_parameters
+        from baselines import create_vmamba_model, count_parameters
         print("\nVerifying all four models …")
         print("=" * 62)
         for v in ['old', 'improved', 'v3', 'v4']:

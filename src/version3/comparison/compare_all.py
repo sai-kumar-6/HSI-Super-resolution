@@ -36,6 +36,7 @@ _V3      = os.path.dirname(_HERE)                    # version3 folder
 sys.path.insert(0, _PROJECT)
 sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
 sys.path.insert(0, _V3)
+sys.path.insert(0, os.path.join(_V3, 'model'))
 
 import torch
 import torch.nn as nn
@@ -59,9 +60,9 @@ try:
 except ImportError:
     HAS_OPENPYXL = False
 
-from dataset_loader_overlap import create_dataloaders_overlap as _create_dl
-from baseline_models import create_vmamba_model, count_parameters
-from loss_functions  import CompositeLoss, compute_psnr, compute_sam_metric, compute_ergas, compute_ssim
+from dataset_overlap import create_dataloaders_overlap as _create_dl
+from baselines       import create_vmamba_model, count_parameters
+from losses          import CompositeLoss, compute_psnr, compute_sam_metric, compute_ergas, compute_ssim
 
 
 # ── Paths ────────────────────────────────────────────────────────────────────

@@ -1,5 +1,5 @@
 """
-vmamba_pansharp_v5.py  —  Version 5 (V5)
+model.py  —  Version 5 (V5)
 M.Tech Thesis: Hyperspectral Image Pansharpening
 
 Core Innovation: TRUE Parallel Scan (Hillis-Steele Algorithm)
@@ -71,21 +71,37 @@ REUSED FROM V4 (unchanged):
 import os
 import sys
 import math
+import importlib.util
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from einops import rearrange, repeat
 
-_HERE    = os.path.dirname(os.path.abspath(__file__))
-_PROJECT = os.path.dirname(_HERE)
-sys.path.insert(0, os.path.join(_PROJECT, 'version3'))
-sys.path.insert(0, os.path.join(_PROJECT, 'version4'))
+_HERE    = os.path.dirname(os.path.abspath(__file__))   # version5/model/
+_V5      = os.path.dirname(_HERE)                        # version5/
+_PROJECT = os.path.dirname(_V5)                           # src/
 sys.path.insert(0, _PROJECT)
 sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
-sys.path.insert(0, _HERE)
+
+
+def _load_module(name, filepath):
+    """Load a module by absolute file path under a unique sys.modules key
+    (every version's model file is now named model.py, so a plain
+    `import model` would collide across versions)."""
+    if name in sys.modules:
+        return sys.modules[name]
+    spec   = importlib.util.spec_from_file_location(name, filepath)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
 
 from vmamba_pansharp_improved import ImprovedHSIEncoder, ImprovedPANEncoder
-from vmamba_pansharp_v4 import ScaledSpatialDetailInjection, StrongReconstructionHead
+
+_v4_model = _load_module('v4_model', os.path.join(_PROJECT, 'version4', 'model', 'model.py'))
+ScaledSpatialDetailInjection = _v4_model.ScaledSpatialDetailInjection
+StrongReconstructionHead     = _v4_model.StrongReconstructionHead
 
 
 # ============================================================================

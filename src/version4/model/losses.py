@@ -1,5 +1,5 @@
 """
-loss_functions_v4.py  —  Version 4 Loss Functions
+losses.py  —  Version 4 Loss Functions
 M.Tech Thesis: Hyperspectral Pansharpening
 
 New in V4
@@ -27,8 +27,8 @@ import math
 
 import os
 import sys
-_HERE    = os.path.dirname(os.path.abspath(__file__))
-_PROJECT = os.path.dirname(_HERE)
+_HERE    = os.path.dirname(os.path.abspath(__file__))    # version4/model/
+_PROJECT = os.path.dirname(os.path.dirname(_HERE))         # src/
 sys.path.insert(0, _PROJECT)
 sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
 

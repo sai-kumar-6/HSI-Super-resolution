@@ -44,8 +44,8 @@ def _load_module(name, filepath):
     return mod
 
 
-_bm = _load_module('baseline_models_v6',    os.path.join(_V6, 'baseline_models.py'))
-_lf = _load_module('loss_functions_v6_mod', os.path.join(_V6, 'loss_functions_v6.py'))
+_bm = _load_module('baseline_models_v6',    os.path.join(_V6, 'model', 'baselines.py'))
+_lf = _load_module('loss_functions_v6_mod', os.path.join(_V6, 'model', 'losses.py'))
 
 create_vmamba_model = _bm.create_vmamba_model
 count_parameters    = _bm.count_parameters

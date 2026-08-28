@@ -48,6 +48,7 @@ _PROJECT = os.path.dirname(_HERE)
 sys.path.insert(0, _PROJECT)
 sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
 sys.path.insert(0, _HERE)
+sys.path.insert(0, os.path.join(_HERE, 'model'))
 
 
 def run(cmd):
@@ -96,7 +97,7 @@ def main():
 
     if args.command == 'verify':
         import torch
-        from baseline_models import create_vmamba_model, count_parameters
+        from baselines import create_vmamba_model, count_parameters
         print("\nVerifying all three models …")
         print("=" * 55)
         for v in ['old', 'improved', 'v3']:

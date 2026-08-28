@@ -25,6 +25,7 @@ sys.path.insert(0, os.path.join(_PROJECT, 'version3'))  # lowest priority
 sys.path.insert(0, _PROJECT)
 sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
 sys.path.insert(0, _V4)                                  # highest priority — version4 baseline_models wins
+sys.path.insert(0, os.path.join(_V4, 'model'))
 
 import torch
 import torch.nn as nn
@@ -54,10 +55,10 @@ try:
 except ImportError:
     def tqdm(x, **kw): return x
 
-from dataset_loader_overlap import create_dataloaders_overlap
-from baseline_models import create_vmamba_model, count_parameters
-from loss_functions_v4 import CompositeLossV4, compute_psnr, compute_sam_metric, compute_ergas
-from loss_functions import compute_ssim
+from dataset_overlap import create_dataloaders_overlap
+from baselines       import create_vmamba_model, count_parameters
+from losses          import CompositeLossV4, compute_psnr, compute_sam_metric, compute_ergas
+from loss_functions   import compute_ssim
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 CHIKUSEI_PATH = os.path.join(_PROJECT, 'chikusei', 'chikusei.mat')

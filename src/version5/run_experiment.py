@@ -54,6 +54,7 @@ sys.path.insert(0, _PROJECT)
 sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
 sys.path.insert(0, os.path.join(_PROJECT, 'version4'))
 sys.path.insert(0, _HERE)                               # highest priority
+sys.path.insert(0, os.path.join(_HERE, 'model'))
 
 import subprocess
 
@@ -113,7 +114,7 @@ def main():
 
     if args.command == 'verify':
         import torch
-        from baseline_models import create_vmamba_model, count_parameters
+        from baselines import create_vmamba_model, count_parameters
         print("\nVerifying all five models …")
         print("=" * 66)
         for v in ['old', 'improved', 'v3', 'v4', 'v5']:

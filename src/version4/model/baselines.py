@@ -12,19 +12,38 @@ Variants
 
 import os
 import sys
+import importlib.util
 import torch
 import torch.nn as nn
 
-_HERE    = os.path.dirname(os.path.abspath(__file__))
-_PROJECT = os.path.dirname(_HERE)
+_HERE    = os.path.dirname(os.path.abspath(__file__))   # version4/model/
+_V4      = os.path.dirname(_HERE)                        # version4/
+_PROJECT = os.path.dirname(_V4)                           # src/
 sys.path.insert(0, _PROJECT)
 sys.path.insert(0, os.path.join(_PROJECT, 'scripts'))
-sys.path.insert(0, os.path.join(_PROJECT, 'version3'))
+sys.path.insert(0, _HERE)
 
-from vmamba_pansharp          import VMambaPansharp
+
+def _load_module(name, filepath):
+    """Load a module by absolute file path under a unique sys.modules key
+    (every version's model file is now named model.py, so a plain
+    `import model` would collide across versions)."""
+    if name in sys.modules:
+        return sys.modules[name]
+    spec   = importlib.util.spec_from_file_location(name, filepath)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+_v1_model = _load_module('v1_model', os.path.join(_PROJECT, 'version1', 'model', 'model.py'))
+_v3_model = _load_module('v3_model', os.path.join(_PROJECT, 'version3', 'model', 'model.py'))
+VMambaPansharp   = _v1_model.VMambaPansharp
+V3VMambaPansharp = _v3_model.V3VMambaPansharp
+
 from vmamba_pansharp_improved import ImprovedVMambaPansharp
-from vmamba_pansharp_v3       import V3VMambaPansharp
-from vmamba_pansharp_v4       import V4VMambaPansharp
+from model                    import V4VMambaPansharp
 
 
 def count_parameters(model: nn.Module):

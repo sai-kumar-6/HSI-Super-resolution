@@ -60,8 +60,8 @@ def _load_module(name, path):
 
 
 def load_v6(device):
-    _bm  = _load_module('baseline_models_v6',    os.path.join(_V6, 'baseline_models.py'))
-    _lf  = _load_module('loss_functions_v6_mod', os.path.join(_V6, 'loss_functions_v6.py'))
+    _bm  = _load_module('baseline_models_v6',    os.path.join(_V6, 'model', 'baselines.py'))
+    _lf  = _load_module('loss_functions_v6_mod', os.path.join(_V6, 'model', 'losses.py'))
     model = _bm.create_vmamba_model(
         'v6', in_ch=IN_CH, out_ch=IN_CH, scale=SCALE,
         d_model=64, d_state=8, num_blocks=[1,1,1,1],

@@ -20,6 +20,7 @@ import math
 _HERE    = os.path.dirname(os.path.abspath(__file__))
 _PROJECT = os.path.dirname(_HERE)
 sys.path.insert(0, _HERE)
+sys.path.insert(0, os.path.join(_HERE, 'model'))
 
 import torch
 import torch.nn.functional as F
@@ -33,10 +34,10 @@ except ImportError:
     HAS_TQDM = False
     def tqdm(x, **kw): return x
 
-from dataset_loader  import create_dataloaders
-from model           import V2VMambaPansharp, count_parameters
-from loss_functions  import CompositeLoss, compute_psnr, compute_sam, compute_ergas, compute_ssim
-from logger          import ExperimentLogger
+from dataset          import create_dataloaders
+from model            import V2VMambaPansharp, count_parameters
+from losses           import CompositeLoss, compute_psnr, compute_sam, compute_ergas, compute_ssim
+from logger           import ExperimentLogger
 
 CHIKUSEI_PATH = os.path.join(_PROJECT, 'chikusei', 'chikusei.mat')
 
