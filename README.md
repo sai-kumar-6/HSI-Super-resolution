@@ -1,6 +1,6 @@
 # VMamba Hyperspectral Pansharpening
 
-M.Tech thesis project: hyperspectral image pansharpening using Mamba-based state-space models.
+Hyperspectral image pansharpening using Mamba-based state-space models.
 The model architecture and training pipeline evolved across six iterations, each kept as a
 self-contained snapshot under `src/`.
 
